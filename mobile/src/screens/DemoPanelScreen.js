@@ -10,7 +10,7 @@ export default function DemoPanelScreen({ navigation }) {
   const [weather, setWeather] = useState("sunny");
   const [demandLevel, setDemandLevel] = useState("quiet");
   const [merchants, setMerchants] = useState([]);
-  const [merchantId, setMerchantId] = useState("cafe_muller");
+  const [merchantId, setMerchantId] = useState("elmwood_cafe");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function DemoPanelScreen({ navigation }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          merchantId: merchantId || "cafe_muller",
+          merchantId: merchantId || "elmwood_cafe",
           userLat: lat,
           userLon: lon,
           overrides: {
@@ -75,7 +75,7 @@ export default function DemoPanelScreen({ navigation }) {
       navigation.navigate("OfferCard", {
         offer: data,
         merchantName: selectedMerchant?.name || "Nearby Merchant",
-        merchantId: merchantId || "cafe_muller",
+        merchantId: merchantId || "elmwood_cafe",
         baseUrl,
       });
     } finally {
