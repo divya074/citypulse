@@ -1,0 +1,66 @@
+[
+  {
+    "id": "elmwood_cafe",
+    "name": "Elmwood Tazza Cafe",
+    "category": "cafe",
+    "lat": 42.9134,
+    "lon": -78.8784,
+    "address": "1014 Elmwood Ave, Buffalo, NY 14222"
+  },
+  {
+    "id": "buffalo_distilling",
+    "name": "Buffalo Distilling Co",
+    "category": "bar",
+    "lat": 42.8864,
+    "lon": -78.8762,
+    "address": "860 Seneca St, Buffalo, NY 14210"
+  },
+  {
+    "id": "wiechec_restaurant",
+    "name": "Wiechec's Lounge",
+    "category": "restaurant",
+    "lat": 42.8923,
+    "lon": -78.8701,
+    "address": "1 Wiechec's Way, Buffalo, NY 14206"
+  },
+  {
+    "id": "spot_coffee",
+    "name": "Spot Coffee",
+    "category": "cafe",
+    "lat": 42.8867,
+    "lon": -78.8784,
+    "address": "227 Delaware Ave, Buffalo, NY 14202"
+  },
+  {
+    "id": "publichouse",
+    "name": "The Public House",
+    "category": "bar",
+    "lat": 42.8901,
+    "lon": -78.8712,
+    "address": "525 Main St, Buffalo, NY 14203"
+  },
+  {
+    "id": "mothers_restaurant",
+    "name": "Mother's Restaurant",
+    "category": "restaurant",
+    "lat": 42.9012,
+    "lon": -78.8698,
+    "address": "33 Virginia Pl, Buffalo, NY 14202"
+  },
+  {
+    "id": "lloyd_taco",
+    "name": "Lloyd Taco Factory",
+    "category": "restaurant",
+    "lat": 42.9089,
+    "lon": -78.8756,
+    "address": "1503 Hertel Ave, Buffalo, NY 14216"
+  },
+  {
+    "id": "sweet_tooth_bakery",
+    "name": "Sweet Tooth Bakery",
+    "category": "bakery",
+    "lat": 42.9123,
+    "lon": -78.8801,
+    "address": "765 Elmwood Ave, Buffalo, NY 14222"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "merchant_id": "elmwood_cafe",
+    "max_discount": 20,
+    "trigger": "quiet",
+    "tone": "warm and cozy — Buffalo winters are brutal, lean into the warmth",
+    "time_window": "07:00-14:00",
+    "target_radius_metres": 300,
+    "preferred_weather": ["snow", "rain", "cold"],
+    "offer_goal": "Fill slow mid-morning slots with walk-in traffic from Elmwood Ave"
+  },
+  {
+    "merchant_id": "buffalo_distilling",
+    "max_discount": 15,
+    "trigger": "quiet",
+    "tone": "cool and local — proud Buffalo identity, blue collar craft",
+    "time_window": "14:00-18:00",
+    "target_radius_metres": 400,
+    "preferred_weather": ["any"],
+    "offer_goal": "Drive early evening happy hour traffic before dinner rush"
+  },
+  {
+    "merchant_id": "wiechec_restaurant",
+    "max_discount": 12,
+    "trigger": "quiet",
+    "tone": "friendly and neighbourhood — old Buffalo charm, hearty food",
+    "time_window": "11:00-15:00",
+    "target_radius_metres": 500,
+    "preferred_weather": ["any"],
+    "offer_goal": "Fill tables between lunch and dinner service"
+  },
+  {
+    "merchant_id": "spot_coffee",
+    "max_discount": 18,
+    "trigger": "quiet",
+    "tone": "hip and relaxed — downtown Buffalo creative crowd",
+    "time_window": "08:00-15:00",
+    "target_radius_metres": 250,
+    "preferred_weather": ["snow", "rain", "cold", "clouds"],
+    "offer_goal": "Attract remote workers and students during slow downtown hours"
+  },
+  {
+    "merchant_id": "publichouse",
+    "max_discount": 15,
+    "trigger": "quiet",
+    "tone": "casual and welcoming — Bills fans welcome, sports bar energy",
+    "time_window": "11:00-17:00",
+    "target_radius_metres": 350,
+    "preferred_weather": ["any"],
+    "offer_goal": "Drive lunch traffic on Main St before evening crowd arrives"
+  },
+  {
+    "merchant_id": "mothers_restaurant",
+    "max_discount": 10,
+    "trigger": "quiet",
+    "tone": "warm and homey — Buffalo comfort food institution since 1990",
+    "time_window": "14:00-17:00",
+    "target_radius_metres": 300,
+    "preferred_weather": ["any"],
+    "offer_goal": "Fill the afternoon gap between brunch and dinner service"
+  },
+  {
+    "merchant_id": "lloyd_taco",
+    "max_discount": 20,
+    "trigger": "quiet",
+    "tone": "fun and energetic — young Buffalo crowd, street food vibes",
+    "time_window": "10:00-12:00",
+    "target_radius_metres": 400,
+    "preferred_weather": ["any"],
+    "offer_goal": "Drive early lunch traffic before the noon rush hits Hertel Ave"
+  },
+  {
+    "merchant_id": "sweet_tooth_bakery",
+    "max_discount": 15,
+    "trigger": "quiet",
+    "tone": "cheerful and sweet — neighbourhood bakery feel, treat yourself energy",
+    "time_window": "07:00-10:00",
+    "target_radius_metres": 200,
+    "preferred_weather": ["snow", "cold", "rain"],
+    "offer_goal": "Capture morning foot traffic after the early rush dies down"
+  }
+]

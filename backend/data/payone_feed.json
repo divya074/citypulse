@@ -1,0 +1,58 @@
+[
+  {
+    "merchant_id": "elmwood_cafe",
+    "tx_last_hour": 3,
+    "baseline": 12,
+    "status": "quiet",
+    "note": "Slow mid-morning on Elmwood Ave"
+  },
+  {
+    "merchant_id": "buffalo_distilling",
+    "tx_last_hour": 1,
+    "baseline": 9,
+    "status": "quiet",
+    "note": "Bar traffic low until evening"
+  },
+  {
+    "merchant_id": "wiechec_restaurant",
+    "tx_last_hour": 14,
+    "baseline": 11,
+    "status": "busy",
+    "note": "Lunch rush on Seneca St"
+  },
+  {
+    "merchant_id": "spot_coffee",
+    "tx_last_hour": 2,
+    "baseline": 10,
+    "status": "quiet",
+    "note": "Slow period downtown Delaware Ave"
+  },
+  {
+    "merchant_id": "publichouse",
+    "tx_last_hour": 4,
+    "baseline": 8,
+    "status": "quiet",
+    "note": "Main St quiet before lunch crowd"
+  },
+  {
+    "merchant_id": "mothers_restaurant",
+    "tx_last_hour": 18,
+    "baseline": 14,
+    "status": "busy",
+    "note": "Brunch crowd still going strong"
+  },
+  {
+    "merchant_id": "lloyd_taco",
+    "tx_last_hour": 6,
+    "baseline": 15,
+    "status": "quiet",
+    "note": "Slow before lunch on Hertel Ave"
+  },
+  {
+    "merchant_id": "sweet_tooth_bakery",
+    "tx_last_hour": 2,
+    "baseline": 7,
+    "status": "quiet",
+    "note": "Morning rush ended, quiet now"
+  }
+]

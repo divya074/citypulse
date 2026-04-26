@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "groq-sdk": "^1.1.2",
+    "tavily": "^2.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Buffalo Sabres Home Game",
+    "category": "Sports",
+    "today": false,
+    "venue": "KeyBank Center, 1 SeymourH Knox III Plaza",
+    "radius_km": 1.5,
+    "starts": "19:00",
+    "note": "NHL game — huge foot traffic downtown before and after"
+  },
+  {
+    "name": "Elmwood Village Farmers Market",
+    "category": "Market",
+    "today": true,
+    "venue": "Elmwood Ave at Bidwell Pkwy, Buffalo NY",
+    "radius_km": 0.5,
+    "starts": "09:00",
+    "note": "Weekly Saturday market — heavy foot traffic on Elmwood strip"
+  },
+  {
+    "name": "Buffalo Bills Watch Party",
+    "category": "Sports",
+    "today": false,
+    "venue": "Various bars across Buffalo",
+    "radius_km": 3.0,
+    "starts": "13:00",
+    "note": "Bills game days drive massive bar and restaurant traffic citywide"
+  },
+  {
+    "name": "Thursday at the Square",
+    "category": "Music",
+    "today": false,
+    "venue": "Niagara Square, Buffalo NY",
+    "radius_km": 1.0,
+    "starts": "17:00",
+    "note": "Free outdoor concert series — thousands of attendees downtown"
+  },
+  {
+    "name": "Allentown Art Festival",
+    "category": "Festival",
+    "today": false,
+    "venue": "Allen St and Delaware Ave, Buffalo NY",
+    "radius_km": 0.8,
+    "starts": "10:00",
+    "note": "One of the largest outdoor art festivals in the US"
+  },
+  {
+    "name": "Buffalo First Fridays",
+    "category": "Arts",
+    "today": false,
+    "venue": "Allentown neighborhood, Buffalo NY",
+    "radius_km": 1.0,
+    "starts": "18:00",
+    "note": "Monthly gallery walk — big foot traffic in Allentown and Elmwood"
+  }
+]
