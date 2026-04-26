@@ -17,11 +17,11 @@ function buildFallbackOffer(intentSignal, merchant, rules) {
 async function generateOffer(intentSignal, merchant, rules, extraContext = {}) {
   const activeEvents = extraContext.active_events || [];
   const nearestPoi = extraContext.nearest_poi || null;
-  let localContextSummary = "Stuttgart city centre is active with local movement and foot traffic.";
+  let localContextSummary = "Buffalo New York city centre is active with local movement and foot traffic.";
 
   try {
     const tavilyQuery = [
-      "What is happening in Stuttgart right now?",
+      "What is happening in Buffalo New York right now?",
       nearestPoi?.name ? `Nearby place: ${nearestPoi.name}` : "",
       activeEvents[0]?.name ? `Event: ${activeEvents[0].name}` : "",
       "Include local events, weather vibe, and popular areas.",
@@ -60,7 +60,7 @@ Respond ONLY with valid JSON, no explanation, no markdown.
 Context: ${JSON.stringify(intentSignal)}
 Active local events today: ${JSON.stringify(activeEvents)}
 Nearest real-world POI: ${JSON.stringify(nearestPoi)}
-Live Stuttgart web context from Tavily: ${localContextSummary}
+Live Buffalo New York web context from Tavily: ${localContextSummary}
 Merchant name: ${merchant.name}
 Merchant category: ${merchant.category}
 Rules: max_discount: ${rules.max_discount}%, tone: ${rules.tone}, trigger: ${rules.trigger}

@@ -8,6 +8,7 @@ const {
 const { generateOffer } = require("./offerGenerator");
 const express = require("express");
 const cors = require("cors");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const app = express();
@@ -19,6 +20,7 @@ const merchants = require("./data/merchants.json");
 const payoneFeed = require("./data/payone_feed.json");
 const events = require("./data/events.json");
 const merchantRules = require("./data/merchant_rules.json");
+const redemptions = {};
 
 // ---- Route 1: Health check ----
 app.get("/", (req, res) => {
@@ -65,16 +67,17 @@ app.get("/weather", async (req, res) => {
   try {
     const userLat = parseFloat(req.query.lat);
     const userLon = parseFloat(req.query.lon);
-    const lat = Number.isFinite(userLat) ? userLat : 48.7758;
-    const lon = Number.isFinite(userLon) ? userLon : 9.1829;
+    if (!Number.isFinite(userLat) || !Number.isFinite(userLon)) {
+      return res.status(400).json({ error: "lat and lon query params are required" });
+    }
 
     console.log("Calling Weather API");
     const response = await axios.get(
       "https://api.openweathermap.org/data/2.5/weather",
       {
         params: {
-          lat,
-          lon,
+          lat: userLat,
+          lon: userLon,
           appid: process.env.OPENWEATHER_API_KEY,
           units: "metric",
         },
@@ -94,23 +97,21 @@ app.get("/weather", async (req, res) => {
 
     res.json(weatherPayload);
   } catch (error) {
-    const fallbackWeather = {
-      temp: 11,
-      feels_like: 8,
-      description: "light rain",
-      main: "Rain",
-      city: "Stuttgart",
-      source: "fallback",
-    };
-    console.log("Weather API fetch failed; using fallback weather");
-    res.json(fallbackWeather);
+    console.log("Weather API fetch failed");
+    res.status(500).json({ error: "Could not fetch weather" });
   }
 });
 
 // ---- Route 6: Get full context for a user location ----
 app.get("/events", async (req, res) => {
   try {
-    let activeEvents = await fetchLocalEvents();
+    const lat = parseFloat(req.query.lat);
+    const lon = parseFloat(req.query.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return res.status(400).json({ error: "lat and lon query params are required" });
+    }
+
+    let activeEvents = await fetchLocalEvents(lat, lon);
     if (activeEvents.length === 0) {
       const fallbackEvent = events.find((e) => e.today === true);
       activeEvents = fallbackEvent
@@ -127,8 +128,11 @@ app.get("/events", async (req, res) => {
 // ---- Route 7: Get full context for a user location ----
 app.get("/nearby-pois", async (req, res) => {
   try {
-    const lat = parseFloat(req.query.lat) || 48.7758;
-    const lon = parseFloat(req.query.lon) || 9.1829;
+    const lat = parseFloat(req.query.lat);
+    const lon = parseFloat(req.query.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return res.status(400).json({ error: "lat and lon query params are required" });
+    }
     let pois = await fetchNearbyPOIs(lat, lon);
     if (pois.length === 0) {
       pois = merchants.slice(0, 3).map((m) => ({
@@ -148,9 +152,11 @@ app.get("/nearby-pois", async (req, res) => {
 // ---- Route 8: Get full context for a user location ----
 app.get("/aggregate-context", async (req, res) => {
   try {
-    // Use Stuttgart centre coords for now — mobile will send real GPS later
-    const userLat = parseFloat(req.query.lat) || 48.7758;
-    const userLon = parseFloat(req.query.lon) || 9.1829;
+    const userLat = parseFloat(req.query.lat);
+    const userLon = parseFloat(req.query.lon);
+    if (!Number.isFinite(userLat) || !Number.isFinite(userLon)) {
+      return res.status(400).json({ error: "lat and lon query params are required" });
+    }
 
     // Use weather if available, fallback if not
     let weatherData = null;
@@ -192,7 +198,10 @@ app.get("/aggregate-context", async (req, res) => {
 // ---- Route 9: Generate offer ----
 app.post("/generate-offer", async (req, res) => {
   try {
-    const { merchantId, userLat, userLon } = req.body;
+    const { merchantId, userLat, userLon, overrides } = req.body;
+    if (!Number.isFinite(userLat) || !Number.isFinite(userLon)) {
+      return res.status(400).json({ error: "userLat and userLon are required" });
+    }
 
     // Get merchant
     const merchant = merchants.find((m) => m.id === merchantId);
@@ -210,8 +219,8 @@ app.post("/generate-offer", async (req, res) => {
         "https://api.openweathermap.org/data/2.5/weather",
         {
           params: {
-            lat: userLat || 48.7758,
-            lon: userLon || 9.1829,
+            lat: userLat,
+            lon: userLon,
             appid: process.env.OPENWEATHER_API_KEY,
             units: "metric",
           },
@@ -231,10 +240,39 @@ app.post("/generate-offer", async (req, res) => {
     }
 
     const context = await aggregateContext(
-      userLat || 48.7758,
-      userLon || 9.1829,
+      userLat,
+      userLon,
       weatherData
     );
+
+    if (overrides) {
+      if (overrides.weather) {
+        context.weather = {
+          ...context.weather,
+          main: overrides.weather,
+          description: overrides.weather,
+        };
+      }
+      if (overrides.demand_level) {
+        context.demandLevel = overrides.demand_level;
+        context.demand_level = overrides.demand_level;
+      }
+      if (overrides.merchant_name) {
+        context.nearest_poi = {
+          ...(context.nearest_poi || {}),
+          name: overrides.merchant_name,
+        };
+      }
+      if (context.intentSignal) {
+        if (overrides.demand_level) {
+          context.intentSignal.urgency =
+            overrides.demand_level === "quiet" ? "high" : "low";
+        }
+        if (context.nearest_poi?.name && context.nearest_poi?.distance_metres) {
+          context.intentSignal.context = `${context.nearest_poi.name} ${context.nearest_poi.distance_metres}m away`;
+        }
+      }
+    }
 
     // Generate offer using LLM
     const offer = await generateOffer(
@@ -263,6 +301,111 @@ app.post("/generate-offer", async (req, res) => {
   } catch (error) {
     console.error("Offer generation error:", error);
     res.status(500).json({ error: "Could not generate offer" });
+  }
+});
+
+// ---- Route 10: Create redeem token ----
+app.post("/redeem", (req, res) => {
+  try {
+    const { merchantId, discount_pct } = req.body;
+    if (!merchantId) {
+      return res.status(400).json({ error: "merchantId is required" });
+    }
+
+    const token = crypto.randomUUID();
+    const now = Date.now();
+    const expiresAt = now + 15 * 60 * 1000;
+
+    redemptions[token] = {
+      token,
+      merchant_id: merchantId,
+      discount_pct: Number(discount_pct) || 0,
+      status: "pending",
+      created_at: now,
+      expires_at: expiresAt,
+    };
+
+    res.json({
+      token,
+      expires_at: expiresAt,
+      status: "pending",
+    });
+  } catch (error) {
+    console.error("Redeem route error:", error.message);
+    res.status(500).json({ error: "Could not create redeem token" });
+  }
+});
+
+// ---- Route 11: Validate token ----
+app.post("/validate/:token", (req, res) => {
+  try {
+    const { token } = req.params;
+    const record = redemptions[token];
+
+    if (!record) {
+      return res.status(404).json({ error: "Token not found" });
+    }
+
+    if (Date.now() > record.expires_at) {
+      record.status = "expired";
+      return res.status(410).json({ error: "Token expired", status: "expired" });
+    }
+
+    if (record.status === "redeemed") {
+      const cashback = Number(
+        ((12 * record.discount_pct) / 100).toFixed(2)
+      );
+      return res.json({ status: "redeemed", cashback });
+    }
+
+    record.status = "redeemed";
+    record.redeemed_at = Date.now();
+    const cashback = Number(((12 * record.discount_pct) / 100).toFixed(2));
+
+    res.json({
+      status: "redeemed",
+      cashback,
+      merchant_id: record.merchant_id,
+    });
+  } catch (error) {
+    console.error("Validate route error:", error.message);
+    res.status(500).json({ error: "Could not validate token" });
+  }
+});
+
+// ---- Route 12: Merchant dashboard metrics ----
+app.get("/dashboard/:merchantId", (req, res) => {
+  try {
+    const { merchantId } = req.params;
+    const records = Object.values(redemptions).filter(
+      (r) => r.merchant_id === merchantId
+    );
+
+    const offersSent = records.length;
+    const offersRedeemed = records.filter((r) => r.status === "redeemed").length;
+    const acceptRate = offersSent
+      ? Number(((offersRedeemed / offersSent) * 100).toFixed(1))
+      : 0;
+    const avgDiscount = offersSent
+      ? Number(
+          (
+            records.reduce((sum, r) => sum + (Number(r.discount_pct) || 0), 0) /
+            offersSent
+          ).toFixed(1)
+        )
+      : 0;
+
+    res.json({
+      merchant_id: merchantId,
+      offers_sent: offersSent,
+      offers_redeemed: offersRedeemed,
+      accept_rate: acceptRate,
+      avg_discount: avgDiscount,
+      best_headline: "Rainy day? Warm up nearby",
+    });
+  } catch (error) {
+    console.error("Dashboard route error:", error.message);
+    res.status(500).json({ error: "Could not fetch dashboard metrics" });
   }
 });
 

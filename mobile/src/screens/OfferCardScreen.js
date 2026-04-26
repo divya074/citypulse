@@ -1,6 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
+function resolveColor(scheme) {
+  if (scheme === "warm") return "#FF8C42";
+  if (scheme === "cool") return "#5B8CFF";
+  if (scheme === "neutral") return "#A8B0C3";
+  return "#5B8CFF";
+}
+
 const DEFAULT_OFFER = {
   headline: "Special offer",
   subtext: "Limited-time savings nearby.",
@@ -12,8 +19,10 @@ const DEFAULT_OFFER = {
 };
 
 export default function OfferCardScreen({ route, navigation }) {
-  const { offer: rawOffer, merchantName, merchantId } = route.params || {};
-  const offer = { ...DEFAULT_OFFER, ...(rawOffer || {}) };
+  const { offer: rawOffer, merchantName, merchantId, baseUrl } =
+    route.params || {};
+  const resolvedOffer = rawOffer?.offer ? rawOffer.offer : rawOffer;
+  const offer = { ...DEFAULT_OFFER, ...(resolvedOffer || {}) };
 
   const handleDismiss = () => {
     navigation.goBack();
@@ -23,13 +32,14 @@ export default function OfferCardScreen({ route, navigation }) {
     navigation.navigate("QrCode", {
       offer,
       merchantName: merchantName || "Nearby Merchant",
-      merchantId: merchantId || "m1",
+      merchantId: merchantId || "elmwood_cafe",
+      baseUrl,
     });
   };
 
   return (
     <View style={styles.container}>
-      <View style={[styles.card, { borderColor: offer.color_scheme }]}>
+      <View style={[styles.card, { borderColor: resolveColor(offer.color_scheme) }]}>
         <Text style={styles.emoji}>{offer.emoji}</Text>
         <Text style={styles.merchant}>{merchantName || "Nearby Merchant"}</Text>
 
@@ -42,7 +52,10 @@ export default function OfferCardScreen({ route, navigation }) {
         </View>
 
         <TouchableOpacity
-          style={[styles.acceptButton, { backgroundColor: offer.color_scheme }]}
+          style={[
+            styles.acceptButton,
+            { backgroundColor: resolveColor(offer.color_scheme) },
+          ]}
           onPress={handleAccept}
         >
           <Text style={styles.acceptButtonText}>{offer.cta}</Text>

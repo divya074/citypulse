@@ -47,7 +47,7 @@ function mapToIntent(
   };
 }
 
-async function fetchLocalEvents() {
+async function fetchLocalEvents(userLat, userLon) {
   if (!process.env.TICKETMASTER_API_KEY) {
     console.log("Events API key missing; using fallback events");
     return [];
@@ -63,8 +63,7 @@ async function fetchLocalEvents() {
       {
         params: {
           apikey: process.env.TICKETMASTER_API_KEY,
-          city: "Stuttgart",
-          countryCode: "DE",
+          latlong: `${userLat},${userLon}`,
           radius: 10,
           unit: "km",
           size: 3,
@@ -191,7 +190,7 @@ async function aggregateContext(userLat, userLon, weatherData) {
   const demandLevel = payone ? payone.status : "unknown";
 
   // Live events from Ticketmaster with safe fallback
-  let activeEvents = await fetchLocalEvents();
+  let activeEvents = await fetchLocalEvents(userLat, userLon);
   if (activeEvents.length === 0) {
     const fallbackEvent = events.find((e) => e.today === true);
     activeEvents = fallbackEvent
@@ -205,7 +204,7 @@ async function aggregateContext(userLat, userLon, weatherData) {
     feels_like: 8,
     description: "light rain",
     main: "Rain",
-    city: "Stuttgart",
+    city: "User area",
   };
 
   // Map to intent — raw GPS stays here, only intent goes upstream
